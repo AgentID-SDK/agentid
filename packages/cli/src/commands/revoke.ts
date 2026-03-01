@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { createRevocation, loadKeypair, getAgentId } from '@agentid-sdk/core';
+import { createRevocation, loadKeypair, getAgentId } from '@agentid-protocol/core';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';

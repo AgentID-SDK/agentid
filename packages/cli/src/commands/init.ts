@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { generateKeypair, saveKeypair, getAgentId } from '@agentid-sdk/core';
+import { generateKeypair, saveKeypair, getAgentId } from '@agentid-protocol/core';
 import { mkdir, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';

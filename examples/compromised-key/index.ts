@@ -18,7 +18,7 @@ import {
   createRevocation,
   createRotation,
   verifyRotation,
-} from '@agentid-sdk/core';
+} from '@agentid-protocol/core';
 
 async function main() {
   console.log('=== AgentID Compromised Key Example ===\n');

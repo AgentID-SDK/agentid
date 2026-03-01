@@ -15,7 +15,7 @@ import {
   signMessage,
   verifySignedManifest,
   verifySignedMessage,
-} from '@agentid-sdk/core';
+} from '@agentid-protocol/core';
 
 async function main() {
   console.log('=== AgentID Handshake Example ===\n');

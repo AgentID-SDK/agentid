@@ -1,5 +1,5 @@
 {
-  "name": "@agentid-sdk/core",
+  "name": "@agentid-protocol/core",
   "version": "0.1.0",
   "description": "AgentID core SDK - cryptographic identity, manifests, signing, verification, and policy evaluation for AI agents",
   "main": "dist/index.js",

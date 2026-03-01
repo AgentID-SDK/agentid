@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { verifySignedManifest } from '@agentid-sdk/core';
-import type { SignedManifest } from '@agentid-sdk/core';
+import { verifySignedManifest } from '@agentid-protocol/core';
+import type { SignedManifest } from '@agentid-protocol/core';
 import { readFile } from 'node:fs/promises';
 
 export const verifyCommand = new Command('verify')

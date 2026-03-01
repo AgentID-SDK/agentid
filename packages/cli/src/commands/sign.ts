@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { signManifest, loadKeypair } from '@agentid-sdk/core';
-import type { AgentManifest } from '@agentid-sdk/core';
+import { signManifest, loadKeypair } from '@agentid-protocol/core';
+import type { AgentManifest } from '@agentid-protocol/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';

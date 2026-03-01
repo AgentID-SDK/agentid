@@ -25,7 +25,7 @@ import {
   signManifest,
   verifySignedManifest,
   evaluatePolicy,
-} from '@agentid-sdk/core';
+} from '@agentid-protocol/core';
 
 // Create an identity
 const keypair = await generateKeypair();
@@ -59,13 +59,13 @@ const result = await verifySignedManifest(signed);
 
 ```bash
 # TypeScript
-npm install @agentid-sdk/core
+npm install @agentid-protocol/core
 
 # Python
 pip install agentid-core
 
 # CLI
-npm install -g @agentid-sdk/cli
+npm install -g @agentid-protocol/cli
 ```
 
 ## CLI quickstart
@@ -101,9 +101,9 @@ Trust Level 0 is verified offline by default. Levels 1 and 2 require a `domainPr
 
 | Package | Language | Description |
 |---|---|---|
-| [`@agentid-sdk/core`](packages/core-ts) | TypeScript | Core SDK: identity, manifests, signing, verification, policy, rotation, revocation |
+| [`@agentid-protocol/core`](packages/core-ts) | TypeScript | Core SDK: identity, manifests, signing, verification, policy, rotation, revocation |
 | [`agentid-core`](packages/core-py) | Python | Core SDK: identical API surface in Python |
-| [`@agentid-sdk/cli`](packages/cli) | TypeScript | CLI for managing agent identities |
+| [`@agentid-protocol/cli`](packages/cli) | TypeScript | CLI for managing agent identities |
 
 ## Examples
 

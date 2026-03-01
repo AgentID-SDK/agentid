@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { createManifest, validateManifest, loadKeypair, getAgentId } from '@agentid-sdk/core';
+import { createManifest, validateManifest, loadKeypair, getAgentId } from '@agentid-protocol/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';

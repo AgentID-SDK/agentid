@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { evaluatePolicy, loadPolicy, verifySignedManifest } from '@agentid-sdk/core';
-import type { SignedManifest, TrustLevel } from '@agentid-sdk/core';
+import { evaluatePolicy, loadPolicy, verifySignedManifest } from '@agentid-protocol/core';
+import type { SignedManifest, TrustLevel } from '@agentid-protocol/core';
 import { readFile } from 'node:fs/promises';
 
 export const policyCommand = new Command('policy')

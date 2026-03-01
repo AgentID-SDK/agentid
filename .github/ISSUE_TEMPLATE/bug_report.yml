@@ -11,7 +11,7 @@ body:
     attributes:
       label: SDK
       description: Which SDK are you using?
-      placeholder: "@agentid-sdk/core (TypeScript) / agentid-core (Python) / @agentid-sdk/cli"
+      placeholder: "@agentid-protocol/core (TypeScript) / agentid-core (Python) / @agentid-protocol/cli"
     validations:
       required: true
   - type: input

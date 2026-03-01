@@ -9,8 +9,8 @@ import { createServer } from 'node:http';
 import {
   verifySignedManifest,
   evaluatePolicy,
-} from '@agentid-sdk/core';
-import type { Policy, SignedManifest, TrustLevel } from '@agentid-sdk/core';
+} from '@agentid-protocol/core';
+import type { Policy, SignedManifest, TrustLevel } from '@agentid-protocol/core';
 
 const policy: Policy = {
   policy_version: '0.1',

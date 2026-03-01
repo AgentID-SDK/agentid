@@ -14,7 +14,7 @@ import {
   createManifest,
   signManifest,
   verifySignedManifest,
-} from '@agentid-sdk/core';
+} from '@agentid-protocol/core';
 
 async function main() {
   console.log('=== AgentID Basic Agent Example ===\n');

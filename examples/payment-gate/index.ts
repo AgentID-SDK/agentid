@@ -13,8 +13,8 @@ import {
   signManifest,
   verifySignedManifest,
   evaluatePolicy,
-} from '@agentid-sdk/core';
-import type { Policy } from '@agentid-sdk/core';
+} from '@agentid-protocol/core';
+import type { Policy } from '@agentid-protocol/core';
 
 async function main() {
   console.log('=== AgentID Payment Gate Example ===\n');

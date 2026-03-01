@@ -1,5 +1,5 @@
 /**
- * @agentid-sdk/core - Cryptographic identity, manifests, signing, verification,
+ * @agentid-protocol/core - Cryptographic identity, manifests, signing, verification,
  * and policy evaluation for AI agents.
  *
  * @packageDocumentation
