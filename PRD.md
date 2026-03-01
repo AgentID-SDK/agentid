@@ -16,7 +16,7 @@ Open-source drives adoption. Monetization comes from hosted operations (revocati
 
 ### The incident that defines the problem
 
-In early 2025, autonomous AI agents with access to crypto wallets, APIs, and payment rails began operating on social platforms. One such agent (clawdbot) sent approximately $300,000 from its operator's wallet because a user on X simply asked it to. The agent had no mechanism to verify who was asking, whether the request was authorized, or whether the action was within its operational bounds.
+In early 2026, autonomous AI agents with access to crypto wallets, APIs, and payment rails began operating on social platforms. One such agent (clawdbot) sent approximately $300,000 from its operator's wallet because a user on X simply asked it to. The agent had no mechanism to verify who was asking, whether the request was authorized, or whether the action was within its operational bounds.
 
 This is not an edge case. It is the default failure mode of the current agent ecosystem.
 
