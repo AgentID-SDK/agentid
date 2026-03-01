@@ -143,7 +143,6 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting.
 ## Documentation
 
 - [PRD](PRD.md) -- full product requirements document
-- [Strategy](STRATEGY.md) -- open-source and monetization strategy
 - [Contributing](CONTRIBUTING.md) -- how to contribute
 - [Security](SECURITY.md) -- vulnerability reporting
 - [Specification](spec/) -- manifest JSON Schema and test vectors
