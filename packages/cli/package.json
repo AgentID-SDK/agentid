@@ -1,6 +1,6 @@
 {
   "name": "@agentid-protocol/cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CLI for AgentID - manage agent identities, manifests, and trust verification",
   "bin": {
     "agentid": "dist/bin.js"
@@ -24,7 +24,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@agentid-protocol/core": "0.1.1",
+    "@agentid-protocol/core": "0.1.2",
     "commander": "latest"
   },
   "devDependencies": {

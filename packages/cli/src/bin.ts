@@ -11,7 +11,7 @@ import { revokeCommand } from './commands/revoke.js';
 program
   .name('agentid')
   .description('Manage AI agent identities, manifests, and trust verification')
-  .version('0.1.0');
+  .version('0.1.2');
 
 program.addCommand(initCommand);
 program.addCommand(manifestCommand);

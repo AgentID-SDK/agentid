@@ -1,10 +1,3 @@
-/**
- * Verifier Service Example
- *
- * An HTTP server that requires AgentID verification before serving requests.
- * Demonstrates how an API/service owner gates access based on agent trust posture.
- */
-
 import { createServer } from 'node:http';
 import {
   verifySignedManifest,
@@ -97,8 +90,6 @@ function readBody(req: import('node:http').IncomingMessage): Promise<string> {
 
 const PORT = 3456;
 server.listen(PORT, () => {
-  console.log(`=== AgentID Verifier Service ===`);
   console.log(`Listening on http://localhost:${PORT}`);
-  console.log(`\nPOST /api/data with { "signed_manifest": {...} }`);
-  console.log(`The service verifies the agent's identity and evaluates policy before responding.\n`);
+  console.log(`POST /api/data with { "signed_manifest": {...} }`);
 });

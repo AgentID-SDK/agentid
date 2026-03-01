@@ -16,7 +16,6 @@ export interface PolicyContext {
   expired: boolean;
 }
 
-/** Evaluate a request against a policy. Returns a decision with reasons. */
 export function evaluatePolicy(context: PolicyContext, policy: Policy): PolicyResult {
   const matchingRules = policy.rules.filter((rule) => rule.action === context.action);
 
@@ -88,7 +87,6 @@ export function evaluatePolicy(context: PolicyContext, policy: Policy): PolicyRe
   };
 }
 
-/** Load a policy from a local file path or URL. */
 export async function loadPolicy(source: string): Promise<Policy> {
   let raw: string;
 

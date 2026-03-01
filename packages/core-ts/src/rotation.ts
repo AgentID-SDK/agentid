@@ -3,10 +3,7 @@ import type { Keypair, RotationStatement } from './types.js';
 import { getAgentId } from './identity.js';
 import { encodeBase64, decodeBase64, decodeBase58 } from './utils.js';
 
-/**
- * Create a signed rotation statement proving key continuity.
- * The old key signs a statement delegating trust to the new key.
- */
+/** The old key signs a delegation statement to the new key. */
 export async function createRotation(
   oldKeypair: Keypair,
   newPublicKey: Uint8Array
@@ -29,10 +26,6 @@ export async function createRotation(
   };
 }
 
-/**
- * Verify a rotation statement: check that the old key actually signed the
- * continuity proof delegating to the new key.
- */
 export async function verifyRotation(
   statement: RotationStatement
 ): Promise<{ valid: boolean; errors: string[] }> {

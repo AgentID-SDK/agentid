@@ -18,6 +18,13 @@ policyCommand
     const signed: SignedManifest = JSON.parse(signedRaw);
 
     const verifyResult = await verifySignedManifest(signed);
+
+    if (!verifyResult.valid || !verifyResult.manifest) {
+      console.error('Manifest verification failed:');
+      verifyResult.errors.forEach((e) => console.error(`  - ${e}`));
+      process.exit(1);
+    }
+
     const policy = await loadPolicy(options.policy);
 
     const actionParams: Record<string, unknown> = {};
@@ -27,7 +34,7 @@ policyCommand
 
     const result = evaluatePolicy(
       {
-        manifest: verifyResult.manifest!,
+        manifest: verifyResult.manifest,
         trustLevel: verifyResult.trust_level as TrustLevel,
         action: options.action,
         actionParams,

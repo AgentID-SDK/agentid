@@ -1,5 +1,3 @@
-"""Tests for revocation module."""
-
 import json
 from pathlib import Path
 

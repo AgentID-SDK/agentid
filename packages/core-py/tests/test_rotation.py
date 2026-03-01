@@ -1,5 +1,3 @@
-"""Tests for rotation module."""
-
 from agentid.identity import generate_keypair, get_agent_id
 from agentid.rotation import create_rotation, verify_rotation
 

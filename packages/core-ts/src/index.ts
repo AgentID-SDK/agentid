@@ -1,10 +1,3 @@
-/**
- * @agentid-protocol/core - Cryptographic identity, manifests, signing, verification,
- * and policy evaluation for AI agents.
- *
- * @packageDocumentation
- */
-
 export { generateKeypair, loadKeypair, saveKeypair, getAgentId } from './identity.js';
 export type { SaveKeypairOptions } from './identity.js';
 export {

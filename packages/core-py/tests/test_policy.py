@@ -1,5 +1,3 @@
-"""Tests for policy evaluation."""
-
 import json
 from pathlib import Path
 

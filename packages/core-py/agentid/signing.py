@@ -1,5 +1,3 @@
-"""Manifest and message signing."""
-
 from __future__ import annotations
 
 import base64
@@ -13,7 +11,6 @@ from agentid.types import AgentManifest, Keypair, SignedManifest, SignedMessage
 
 
 def sign_manifest(manifest: AgentManifest, keypair: Keypair) -> SignedManifest:
-    """Sign a manifest, producing a signed envelope."""
     payload = canonicalize_manifest(manifest)
     signing_key = SigningKey(keypair.private_key)
     signed = signing_key.sign(payload.encode("utf-8"))
@@ -33,7 +30,6 @@ def sign_message(
     keypair: Keypair,
     manifest_ref: str,
 ) -> SignedMessage:
-    """Sign an arbitrary message for nonce-based handshakes."""
     message = f"{nonce}:{payload}:{manifest_ref}"
     signing_key = SigningKey(keypair.private_key)
     signed = signing_key.sign(message.encode("utf-8"))

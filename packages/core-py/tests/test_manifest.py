@@ -1,5 +1,3 @@
-"""Tests for manifest module."""
-
 import json
 from pathlib import Path
 
@@ -40,7 +38,9 @@ def test_reject_missing_fields():
         expires_at="",
     )
     errors = validate_manifest(m)
-    assert len(errors) > 0
+    assert len(errors) > 0, f"Expected validation errors for empty fields, got none"
+    assert any("agent_id" in e for e in errors)
+    assert any("name" in e for e in errors)
 
 
 def test_reject_invalid_agent_id():

@@ -1,5 +1,3 @@
-"""Policy evaluation engine."""
-
 from __future__ import annotations
 
 import json
@@ -26,7 +24,6 @@ def evaluate_policy(
     expired: bool = False,
     policy: Policy,
 ) -> PolicyResult:
-    """Evaluate a request against a policy. Returns a decision with reasons."""
     matching_rules = [r for r in policy.rules if r.action == action]
 
     if not matching_rules:
@@ -88,7 +85,6 @@ def evaluate_policy(
 
 
 def load_policy(source: str) -> Policy:
-    """Load a policy from a file path."""
     raw = Path(source).read_text(encoding="utf-8")
     data = json.loads(raw)
 

@@ -1,14 +1,3 @@
-/**
- * Compromised Key Example
- *
- * Simulates a key compromise scenario:
- * 1. Agent operates normally with a valid identity
- * 2. Key is compromised -- operator detects it
- * 3. Operator revokes the key
- * 4. All verifiers immediately reject the compromised key
- * 5. Operator rotates to a new key with continuity proof
- */
-
 import {
   generateKeypair,
   getAgentId,
@@ -21,10 +10,7 @@ import {
 } from '@agentid-protocol/core';
 
 async function main() {
-  console.log('=== AgentID Compromised Key Example ===\n');
-
-  // Step 1: Normal operation
-  console.log('1. Agent operating normally');
+  // Normal operation
   const originalKp = await generateKeypair();
   const agentId = getAgentId(originalKp.publicKey);
   const manifest = createManifest({
@@ -36,39 +22,29 @@ async function main() {
   });
   const signed = await signManifest(manifest, originalKp);
   const result1 = await verifySignedManifest(signed);
-  console.log(`   Agent ID: ${agentId}`);
-  console.log(`   Verified: ${result1.valid}\n`);
+  console.log(`Agent ID: ${agentId}`);
+  console.log(`Verified: ${result1.valid}\n`);
 
-  // Step 2: Key compromise detected
-  console.log('2. KEY COMPROMISE DETECTED');
-  console.log('   Operator notices unauthorized activity\n');
-
-  // Step 3: Revoke the compromised key
-  console.log('3. Revoking compromised key');
+  // Revoke the compromised key
+  console.log('KEY COMPROMISE DETECTED -- revoking');
   const revocation = await createRevocation(agentId, agentId, 'key_compromise', originalKp);
-  console.log(`   Revocation statement created at ${revocation.revoked_at}`);
-  console.log(`   Reason: ${revocation.reason}\n`);
+  console.log(`Revocation created at ${revocation.revoked_at}\n`);
 
-  // Step 4: Verifiers now reject the old key
-  console.log('4. Verifier checks with revocation list');
+  // Verifiers now reject the old key
   const revokedKeys = new Set([agentId]);
   const result2 = await verifySignedManifest(signed, { revokedKeyIds: revokedKeys });
-  console.log(`   Verified: ${result2.valid}`);
-  console.log(`   Revoked:  ${result2.revoked}`);
-  console.log(`   Errors:   ${result2.errors.join(', ')}\n`);
+  console.log(`Post-revocation verification: valid=${result2.valid}, revoked=${result2.revoked}`);
+  console.log(`Errors: ${result2.errors.join(', ')}\n`);
 
-  // Step 5: Rotate to new key
-  console.log('5. Rotating to new key');
+  // Rotate to new key with continuity proof
   const newKp = await generateKeypair();
   const newAgentId = getAgentId(newKp.publicKey);
   const rotation = await createRotation(originalKp, newKp.publicKey);
   const { valid: rotationValid } = await verifyRotation(rotation);
-  console.log(`   Old key: ${rotation.old_key_id}`);
-  console.log(`   New key: ${rotation.new_key_id}`);
-  console.log(`   Rotation proof valid: ${rotationValid}\n`);
+  console.log(`Rotated: ${rotation.old_key_id} -> ${rotation.new_key_id}`);
+  console.log(`Rotation proof valid: ${rotationValid}\n`);
 
-  // Step 6: New key works
-  console.log('6. New identity is operational');
+  // New identity is operational
   const newManifest = createManifest({
     agentId: newAgentId,
     name: 'TrustedAgent',
@@ -78,10 +54,7 @@ async function main() {
   });
   const newSigned = await signManifest(newManifest, newKp);
   const result3 = await verifySignedManifest(newSigned, { revokedKeyIds: revokedKeys });
-  console.log(`   New agent verified: ${result3.valid}`);
-  console.log(`   Errors: ${result3.errors.length === 0 ? 'none' : result3.errors.join(', ')}\n`);
-
-  console.log('=== Compromise contained. Old key rejected. New key operational. ===');
+  console.log(`New identity verified: ${result3.valid}`);
 }
 
 main().catch(console.error);

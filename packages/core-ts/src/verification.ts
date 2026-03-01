@@ -10,20 +10,14 @@ import type {
 import { decodeBase64, decodeBase64AsString, decodeBase58 } from './utils.js';
 
 export interface VerifyOptions {
-  /** If provided, check against this set of revoked key IDs. */
   revokedKeyIds?: Set<string>;
-  /** Current time override for testing. */
+  /** Override current time (useful for testing). */
   now?: Date;
-  /**
-   * If true and manifest declares domain_proof, attempt DNS/well-known verification.
-   * Defaults to false (offline verification only).
-   */
+  /** Defaults to false (offline verification only). */
   verifyDomainProof?: boolean;
-  /** Custom domain proof verifier. Called with (domain, proofMethod) and must return true/false. */
   domainProofVerifier?: (domain: string, method: 'dns-txt' | 'well-known') => Promise<boolean>;
 }
 
-/** Verify a signed manifest: check signature, expiry, and revocation status. */
 export async function verifySignedManifest(
   signedManifest: SignedManifest,
   options: VerifyOptions = {}
@@ -111,7 +105,6 @@ export async function verifySignedManifest(
   };
 }
 
-/** Verify a signed handshake message. Returns a structured result. */
 export async function verifySignedMessage(
   signedMessage: SignedMessage,
   expectedAgentId?: string
@@ -148,10 +141,6 @@ export async function verifySignedMessage(
   return { valid: errors.length === 0, errors };
 }
 
-/**
- * Verify a revocation statement's signature.
- * Returns true if the signature is valid for the given statement.
- */
 export async function verifyRevocationSignature(
   statement: RevocationStatement
 ): Promise<boolean> {

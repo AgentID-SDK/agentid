@@ -20,9 +20,7 @@ export const initCommand = new Command('init')
         console.error(`Error: Key file already exists at ${keyPath}`);
         console.error('Use --force to overwrite, or back up the existing key first.');
         process.exit(1);
-      } catch {
-        // File does not exist, proceed
-      }
+      } catch {}
     }
 
     const keypair = await generateKeypair();

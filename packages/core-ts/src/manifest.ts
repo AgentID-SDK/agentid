@@ -1,6 +1,6 @@
 import type { AgentManifest } from './types.js';
 
-const CURRENT_MANIFEST_VERSION = '0.1';
+const MANIFEST_VERSION = '0.1';
 
 const REQUIRED_FIELDS: (keyof AgentManifest)[] = [
   'manifest_version',
@@ -22,10 +22,9 @@ export interface CreateManifestConfig {
   metadata?: Record<string, unknown>;
 }
 
-/** Create a new agent manifest from a config object. */
 export function createManifest(config: CreateManifestConfig): AgentManifest {
   const manifest: AgentManifest = {
-    manifest_version: CURRENT_MANIFEST_VERSION,
+    manifest_version: MANIFEST_VERSION,
     agent_id: config.agentId,
     name: config.name,
     version: config.version,
@@ -45,7 +44,6 @@ export function createManifest(config: CreateManifestConfig): AgentManifest {
   return manifest;
 }
 
-/** Validate a manifest against the schema. Returns an array of error strings (empty if valid). */
 export function validateManifest(manifest: AgentManifest): string[] {
   const errors: string[] = [];
 
@@ -55,9 +53,9 @@ export function validateManifest(manifest: AgentManifest): string[] {
     }
   }
 
-  if (manifest.manifest_version && manifest.manifest_version !== CURRENT_MANIFEST_VERSION) {
+  if (manifest.manifest_version && manifest.manifest_version !== MANIFEST_VERSION) {
     errors.push(
-      `Unsupported manifest version: ${manifest.manifest_version} (expected ${CURRENT_MANIFEST_VERSION})`
+      `Unsupported manifest version: ${manifest.manifest_version} (expected ${MANIFEST_VERSION})`
     );
   }
 
@@ -91,27 +89,12 @@ export function validateManifest(manifest: AgentManifest): string[] {
   return errors;
 }
 
-/**
- * Deterministic JSON serialization following RFC 8785 (JCS) conventions.
- * Produces byte-for-byte identical output for logically equivalent manifests
- * across TypeScript and Python SDKs.
- *
- * Cross-language contract:
- * - Object keys are sorted lexicographically
- * - Properties with `undefined` or `null` values are OMITTED (not serialized)
- * - Strings use JSON.stringify escaping
- * - Numbers follow ES2024 serialization rules
- * - Arrays preserve order; null/undefined elements become "null"
- */
+// RFC 8785 (JCS) canonicalization.
 export function canonicalizeManifest(manifest: AgentManifest): string {
   const cleaned = stripNullUndefined(manifest);
   return canonicalize(cleaned);
 }
 
-/**
- * Recursively remove all keys whose values are null or undefined,
- * ensuring consistent behavior with the Python SDK which filters None.
- */
 function stripNullUndefined(value: unknown): unknown {
   if (value === null || value === undefined) return undefined;
   if (typeof value !== 'object') return value;

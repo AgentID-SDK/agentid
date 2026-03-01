@@ -5,10 +5,6 @@ Cryptographic identity, capability constraints, and policy-enforced authorizatio
 [![npm](https://img.shields.io/npm/v/@agentid-protocol/core)](https://www.npmjs.com/package/@agentid-protocol/core)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://github.com/AgentID-SDK/agentid/blob/main/LICENSE)
 
-## Why
-
-An AI agent recently sent $300,000 from its operator's wallet because a stranger on X asked it to. The agent had no way to verify who was asking, no operational limits, and no policy gate. This SDK exists to make sure that never happens again.
-
 ## Install
 
 ```bash
@@ -29,11 +25,9 @@ import {
   evaluatePolicy,
 } from '@agentid-protocol/core';
 
-// 1. Create an identity
 const keypair = await generateKeypair();
 const agentId = getAgentId(keypair.publicKey);
 
-// 2. Create and sign a manifest with spending constraints
 const manifest = createManifest({
   agentId,
   name: 'PaymentBot',
@@ -50,28 +44,30 @@ const manifest = createManifest({
 });
 
 const signed = await signManifest(manifest, keypair);
-
-// 3. Verify identity and enforce policy
 const result = await verifySignedManifest(signed);
-console.log(result.valid);       // true
-console.log(result.trust_level); // 0 (self-signed)
+// result.valid === true
+// result.trust_level === 0 (self-signed)
 
-// 4. Evaluate a policy rule
-const policy = {
-  rules: [{
+const decision = evaluatePolicy(
+  {
+    manifest: result.manifest!,
+    trustLevel: result.trust_level,
     action: 'payments:send',
-    effect: 'allow',
-    conditions: { min_trust_level: 0, require_capability: 'payments:send' },
-  }],
-  default_effect: 'deny',
-};
-
-const decision = evaluatePolicy(policy, {
-  manifest: signed.manifest,
-  action: 'payments:send',
-  trust_level: result.trust_level,
-});
-console.log(decision.decision); // "allow"
+    actionParams: { amount_usd: 50 },
+    revoked: false,
+    expired: false,
+  },
+  {
+    policy_version: '0.1',
+    rules: [{
+      action: 'payments:send',
+      require: { capability_declared: 'payments:send', constraints_satisfied: true },
+      on_fail: 'REJECT',
+    }],
+    default: 'REJECT',
+  }
+);
+// decision.decision === "ACCEPT"
 ```
 
 ## API
@@ -83,7 +79,7 @@ console.log(decision.decision); // "allow"
 | `generateKeypair()` | Generate an Ed25519 keypair |
 | `getAgentId(publicKey)` | Derive a deterministic agent ID from a public key |
 | `saveKeypair(keypair, path, options?)` | Save keypair to disk (0600 permissions, overwrite protection) |
-| `loadKeypair(path)` | Load keypair from disk |
+| `loadKeypair(source)` | Load keypair from file path or `env:VAR_NAME` |
 
 ### Manifests
 
@@ -98,24 +94,25 @@ console.log(decision.decision); // "allow"
 | Function | Description |
 |---|---|
 | `signManifest(manifest, keypair)` | Sign a manifest with a private key |
-| `signMessage(payload, keypair)` | Sign an arbitrary message |
+| `signMessage(payload, nonce, keypair, manifestRef)` | Sign an arbitrary message (for handshakes) |
 | `verifySignedManifest(signed, options?)` | Verify signature, expiry, and optionally domain proof |
-| `verifySignedMessage(signed)` | Verify an arbitrary signed message |
+| `verifySignedMessage(signed, expectedAgentId?)` | Verify an arbitrary signed message |
+| `verifyRevocationSignature(statement)` | Verify a revocation statement's signature |
 
 ### Policy
 
 | Function | Description |
 |---|---|
-| `evaluatePolicy(policy, context)` | Evaluate policy rules against an agent's manifest and action |
-| `loadPolicy(path)` | Load a policy from a JSON file |
+| `evaluatePolicy(context, policy)` | Evaluate policy rules against an agent's manifest and action |
+| `loadPolicy(source)` | Load a policy from a JSON file or URL |
 
 ### Revocation
 
 | Function | Description |
 |---|---|
-| `createRevocation(agentId, keypair, reason)` | Create a signed revocation statement |
-| `checkRevocation(agentId, revocationList)` | Check if an agent ID has been revoked |
-| `loadRevocationList(sources, options?)` | Load and signature-verify revocation lists from files or URLs |
+| `createRevocation(agentId, revokedKeyId, reason, keypair)` | Create a signed revocation statement |
+| `checkRevocation(keyId, revocationList)` | Check if a key ID has been revoked |
+| `loadRevocationList(source, options?)` | Load and signature-verify a revocation list from file or URL |
 
 ### Key rotation
 

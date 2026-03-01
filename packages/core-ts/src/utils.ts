@@ -20,7 +20,7 @@ export function decodeHex(hex: string): Uint8Array {
 }
 
 export function encodeBase58(bytes: Uint8Array): string {
-  if (bytes.length === 0) return '1';
+  if (bytes.length === 0) return '';
   let num = BigInt('0x' + encodeHex(bytes));
   const result: string[] = [];
   while (num > 0n) {
@@ -44,16 +44,19 @@ export function decodeBase58(str: string): Uint8Array {
     num = num * 58n + BigInt(index);
   }
 
-  const hex = num.toString(16);
-  const paddedHex = hex.length % 2 === 0 ? hex : '0' + hex;
-
-  const dataBytes = decodeHex(paddedHex);
-
   let leadingZeros = 0;
   for (const char of str) {
     if (char === '1') leadingZeros++;
     else break;
   }
+
+  if (num === 0n) {
+    return new Uint8Array(leadingZeros);
+  }
+
+  const hex = num.toString(16);
+  const paddedHex = hex.length % 2 === 0 ? hex : '0' + hex;
+  const dataBytes = decodeHex(paddedHex);
 
   if (leadingZeros > 0) {
     const result = new Uint8Array(leadingZeros + dataBytes.length);

@@ -1,5 +1,3 @@
-"""Identity management: keypair generation, storage, and agent ID derivation."""
-
 from __future__ import annotations
 
 import json
@@ -14,7 +12,6 @@ from agentid.utils import encode_base58
 
 
 def generate_keypair() -> Keypair:
-    """Generate a new Ed25519 keypair."""
     signing_key = SigningKey.generate()
     return Keypair(
         public_key=bytes(signing_key.verify_key),
@@ -23,19 +20,11 @@ def generate_keypair() -> Keypair:
 
 
 def get_agent_id(public_key: bytes) -> str:
-    """Derive a deterministic agent ID from a public key."""
     encoded = encode_base58(public_key)
     return f"aid_ed25519_{encoded}"
 
 
 def save_keypair(keypair: Keypair, path: str, *, overwrite: bool = False) -> None:
-    """Save a keypair to disk with restricted file permissions (0600).
-
-    Args:
-        keypair: The keypair to save.
-        path: File path to write to.
-        overwrite: If False (default), raises if file already exists.
-    """
     data = json.dumps({
         "publicKey": keypair.public_key.hex(),
         "privateKey": keypair.private_key.hex(),
@@ -54,7 +43,7 @@ def save_keypair(keypair: Keypair, path: str, *, overwrite: bool = False) -> Non
 
 
 def load_keypair(source: str) -> Keypair:
-    """Load a keypair from a file path or environment variable (prefix with 'env:')."""
+    """Accepts a file path or 'env:VAR_NAME' to read from an environment variable."""
     if source.startswith("env:"):
         env_var = source[4:]
         value = os.environ.get(env_var)

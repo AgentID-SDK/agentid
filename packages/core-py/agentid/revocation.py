@@ -1,5 +1,3 @@
-"""Revocation statement creation, checking, and list management."""
-
 from __future__ import annotations
 
 import json
@@ -20,14 +18,13 @@ def _canonicalize_revocation_payload(
     revoked_at: str,
     reason: str,
 ) -> str:
-    """Canonical field order for deterministic signing."""
     return json.dumps({
         "type": "revocation",
         "agent_id": agent_id,
         "revoked_key_id": revoked_key_id,
         "revoked_at": revoked_at,
         "reason": reason,
-    })
+    }, separators=(",", ":"))
 
 
 def create_revocation(
@@ -36,7 +33,6 @@ def create_revocation(
     reason: str,
     signing_keypair: Keypair,
 ) -> RevocationStatement:
-    """Create a signed revocation statement for a compromised key."""
     revoked_at = datetime.now(timezone.utc).isoformat()
     payload = _canonicalize_revocation_payload(agent_id, revoked_key_id, revoked_at, reason)
 
@@ -58,7 +54,6 @@ def check_revocation(
     key_id: str,
     revocation_list: list[RevocationStatement],
 ) -> tuple[bool, Optional[RevocationStatement]]:
-    """Check if a key ID appears in a revocation list. Returns (revoked, statement)."""
     for r in revocation_list:
         if r.revoked_key_id == key_id or r.agent_id == key_id:
             return True, r
@@ -70,7 +65,6 @@ def load_revocation_list(
     *,
     verify_signatures: bool = True,
 ) -> list[RevocationStatement]:
-    """Load a revocation list from a file path, optionally verifying signatures."""
     from agentid.verification import verify_revocation_signature
 
     raw = Path(source).read_text(encoding="utf-8")

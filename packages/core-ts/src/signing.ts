@@ -4,7 +4,6 @@ import { canonicalizeManifest } from './manifest.js';
 import { getAgentId } from './identity.js';
 import { encodeBase64 } from './utils.js';
 
-/** Sign a manifest, producing a signed envelope. */
 export async function signManifest(
   manifest: AgentManifest,
   keypair: Keypair
@@ -21,7 +20,6 @@ export async function signManifest(
   };
 }
 
-/** Sign an arbitrary message (used for nonce-based handshakes). */
 export async function signMessage(
   payload: string,
   nonce: string,

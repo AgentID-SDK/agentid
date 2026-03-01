@@ -1,5 +1,3 @@
-"""Tests for signing and verification."""
-
 import base64
 
 import pytest

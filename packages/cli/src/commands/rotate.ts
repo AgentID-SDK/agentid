@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { generateKeypair, loadKeypair, saveKeypair, getAgentId, createRotation } from '@agentid-protocol/core';
+import { generateKeypair, loadKeypair, saveKeypair, createRotation } from '@agentid-protocol/core';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';

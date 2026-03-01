@@ -1,5 +1,3 @@
-"""Manifest and message verification."""
-
 from __future__ import annotations
 
 import json
@@ -31,7 +29,6 @@ def verify_signed_manifest(
     verify_domain_proof: bool = False,
     domain_proof_verifier: Optional[Callable[[str, str], bool]] = None,
 ) -> VerificationResult:
-    """Verify a signed manifest: check signature, expiry, and revocation status."""
     errors: list[str] = []
     now = now or datetime.now(timezone.utc)
 
@@ -119,7 +116,6 @@ def verify_signed_message(
     signed_message: SignedMessage,
     expected_agent_id: Optional[str] = None,
 ) -> VerificationResult:
-    """Verify a signed handshake message. Returns a VerificationResult."""
     errors: list[str] = []
 
     if expected_agent_id and signed_message.agent_id != expected_agent_id:
@@ -161,7 +157,6 @@ def verify_signed_message(
 
 
 def verify_revocation_signature(statement: RevocationStatement) -> bool:
-    """Verify a revocation statement's signature. Returns True if valid."""
     public_key_bytes = _extract_public_key(statement.agent_id)
     if public_key_bytes is None:
         return False
@@ -174,7 +169,7 @@ def verify_revocation_signature(statement: RevocationStatement) -> bool:
         "reason": statement.reason,
     }
 
-    payload_bytes = json.dumps(payload).encode("utf-8")
+    payload_bytes = json.dumps(payload, separators=(",", ":")).encode("utf-8")
     signature_bytes = decode_base64(statement.signature)
 
     try:

@@ -1,11 +1,3 @@
-/**
- * Handshake Example
- *
- * Demonstrates a nonce challenge-response handshake between two agents.
- * This prevents replay attacks -- a signed manifest alone could be reused,
- * but a nonce-signed message proves the agent is live.
- */
-
 import { randomBytes } from 'node:crypto';
 import {
   generateKeypair,
@@ -18,10 +10,7 @@ import {
 } from '@agentid-protocol/core';
 
 async function main() {
-  console.log('=== AgentID Handshake Example ===\n');
-
-  // Agent A setup
-  console.log('--- Agent A: Creating identity ---');
+  // Agent A: create identity and signed manifest
   const keypairA = await generateKeypair();
   const agentIdA = getAgentId(keypairA.publicKey);
   const manifestA = createManifest({
@@ -32,45 +21,34 @@ async function main() {
     expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
   });
   const signedManifestA = await signManifest(manifestA, keypairA);
-  console.log(`  Agent A ID: ${agentIdA}\n`);
+  console.log(`Agent A: ${agentIdA}`);
 
-  // Agent B setup (the verifier)
-  console.log('--- Agent B (Verifier): Creating identity ---');
+  // Agent B: verifier
   const keypairB = await generateKeypair();
-  const agentIdB = getAgentId(keypairB.publicKey);
-  console.log(`  Agent B ID: ${agentIdB}\n`);
+  console.log(`Agent B: ${getAgentId(keypairB.publicKey)}\n`);
 
-  // Step 1: Agent A sends signed manifest to Agent B
-  console.log('Step 1: Agent A sends signed manifest to Agent B');
+  // Agent A sends signed manifest; Agent B verifies it
   const verifyResult = await verifySignedManifest(signedManifestA);
-  console.log(`  Manifest valid: ${verifyResult.valid}\n`);
+  console.log(`Manifest valid: ${verifyResult.valid}`);
 
-  // Step 2: Agent B generates a nonce challenge
-  console.log('Step 2: Agent B generates nonce challenge');
+  // Agent B sends nonce challenge
   const nonce = randomBytes(32).toString('hex');
-  console.log(`  Nonce: ${nonce.slice(0, 16)}...\n`);
+  console.log(`Nonce: ${nonce.slice(0, 16)}...`);
 
-  // Step 3: Agent A signs the nonce
-  console.log('Step 3: Agent A signs the nonce');
+  // Agent A signs the nonce
   const manifestHash = 'sha256:' + randomBytes(16).toString('hex');
   const signedResponse = await signMessage('handshake-accept', nonce, keypairA, manifestHash);
-  console.log(`  Signed message created\n`);
 
-  // Step 4: Agent B verifies the signed nonce
-  console.log('Step 4: Agent B verifies the signed nonce');
+  // Agent B verifies the nonce signature
   const messageResult = await verifySignedMessage(signedResponse, agentIdA);
-  console.log(`  Message valid: ${messageResult.valid}`);
-  console.log(`  Errors: ${messageResult.errors.length === 0 ? 'none' : messageResult.errors.join(', ')}\n`);
+  console.log(`Handshake valid: ${messageResult.valid}\n`);
 
-  // Step 5: Demonstrate replay rejection
-  console.log('Step 5: Attempting replay with different nonce (should fail)');
+  // Demonstrate replay rejection
   const replayNonce = randomBytes(32).toString('hex');
   const replayAttempt = { ...signedResponse, nonce: replayNonce };
   const replayResult = await verifySignedMessage(replayAttempt, agentIdA);
-  console.log(`  Replay valid: ${replayResult.valid}`);
-  console.log(`  Errors: ${replayResult.errors.join(', ')}\n`);
-
-  console.log('=== Handshake succeeded. Replay was rejected. ===');
+  console.log(`Replay attempt valid: ${replayResult.valid}`);
+  console.log(`Replay errors: ${replayResult.errors.join(', ')}`);
 }
 
 main().catch(console.error);

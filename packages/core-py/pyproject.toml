@@ -21,6 +21,9 @@ dev = [
     "mypy>=1.0",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["agentid"]
+
 [tool.ruff]
 target-version = "py39"
 line-length = 100

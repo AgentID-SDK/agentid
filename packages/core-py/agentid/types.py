@@ -1,5 +1,3 @@
-"""Type definitions for AgentID."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -82,6 +80,16 @@ class RevocationStatement:
     revoked_at: str
     reason: str
     signature: str
+
+
+@dataclass
+class RotationStatement:
+    type: str
+    old_key_id: str
+    new_key_id: str
+    rotated_at: str
+    continuity_proof: str
+    signature_by_old_key: str
 
 
 class PolicyDecision(str, Enum):

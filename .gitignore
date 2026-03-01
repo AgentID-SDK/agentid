@@ -34,3 +34,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Internal planning docs (not part of the SDK)
+PRD.md
+STRATEGY.md

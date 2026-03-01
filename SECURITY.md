@@ -15,7 +15,7 @@ AgentID is a security-critical project. We take vulnerabilities seriously.
 
 Instead, report vulnerabilities privately:
 
-1. Email: **security@agentid.dev** (update this with your actual security contact)
+1. Email: **security@agentid.dev**
 2. Include:
    - Description of the vulnerability
    - Steps to reproduce

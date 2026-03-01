@@ -1,5 +1,3 @@
-"""Shared encoding/decoding utilities for cross-language consistency."""
-
 from __future__ import annotations
 
 import base64
@@ -8,7 +6,6 @@ BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 
 def encode_base58(data: bytes) -> str:
-    """Encode bytes to base58 string."""
     if len(data) == 0:
         return "1"
     num = int.from_bytes(data, "big")
@@ -27,7 +24,6 @@ def encode_base58(data: bytes) -> str:
 
 
 def decode_base58(s: str) -> bytes:
-    """Decode base58 string to bytes."""
     if len(s) == 0:
         raise ValueError("Empty base58 string")
     num = 0
@@ -58,15 +54,12 @@ def decode_base58(s: str) -> bytes:
 
 
 def encode_base64(data: bytes) -> str:
-    """Encode bytes to base64 string."""
     return base64.b64encode(data).decode("ascii")
 
 
 def decode_base64(s: str) -> bytes:
-    """Decode base64 string to bytes."""
     return base64.b64decode(s)
 
 
 def decode_base64_as_string(s: str) -> str:
-    """Decode base64 string to UTF-8 string."""
     return base64.b64decode(s).decode("utf-8")

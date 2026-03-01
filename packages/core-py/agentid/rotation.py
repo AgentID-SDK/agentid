@@ -1,5 +1,3 @@
-"""Key rotation with cryptographic continuity proofs."""
-
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -13,10 +11,7 @@ from agentid.utils import decode_base58, decode_base64, encode_base64
 
 
 def create_rotation(old_keypair: Keypair, new_public_key: bytes) -> RotationStatement:
-    """Create a signed rotation statement proving key continuity.
-
-    The old key signs a statement delegating trust to the new key.
-    """
+    """The old key signs a delegation statement to the new key."""
     old_key_id = get_agent_id(old_keypair.public_key)
     new_key_id = get_agent_id(new_public_key)
     rotated_at = datetime.now(timezone.utc).isoformat()
@@ -36,10 +31,6 @@ def create_rotation(old_keypair: Keypair, new_public_key: bytes) -> RotationStat
 
 
 def verify_rotation(statement: RotationStatement) -> tuple[bool, list[str]]:
-    """Verify a rotation statement's continuity proof.
-
-    Returns (valid, errors).
-    """
     errors: list[str] = []
 
     expected_proof = f"rotate:{statement.old_key_id}:{statement.new_key_id}:{statement.rotated_at}"

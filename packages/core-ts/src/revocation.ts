@@ -5,10 +5,6 @@ import { getAgentId } from './identity.js';
 import { encodeBase64 } from './utils.js';
 import { verifyRevocationSignature } from './verification.js';
 
-/**
- * Canonical field order for revocation statement signing.
- * Ensures deterministic serialization regardless of object property order.
- */
 function canonicalizeRevocationPayload(
   statement: Omit<RevocationStatement, 'signature'>
 ): string {
@@ -21,7 +17,6 @@ function canonicalizeRevocationPayload(
   });
 }
 
-/** Create a signed revocation statement for a compromised key. */
 export async function createRevocation(
   agentId: string,
   revokedKeyId: string,
@@ -46,7 +41,6 @@ export async function createRevocation(
   };
 }
 
-/** Check if a given key ID appears in a revocation list. */
 export function checkRevocation(
   keyId: string,
   revocationList: RevocationStatement[]
@@ -58,14 +52,10 @@ export function checkRevocation(
 }
 
 export interface LoadRevocationListOptions {
-  /**
-   * If true, verify each revocation statement's signature and discard invalid ones.
-   * Defaults to true. Set to false only for debugging.
-   */
+  /** Defaults to true. Set to false only for debugging. */
   verifySignatures?: boolean;
 }
 
-/** Load a revocation list from a file path or URL, optionally verifying signatures. */
 export async function loadRevocationList(
   source: string,
   options: LoadRevocationListOptions = {}
@@ -80,6 +70,10 @@ export async function loadRevocationList(
       const response = await fetch(source, { signal: controller.signal });
       if (!response.ok) {
         throw new Error(`Failed to fetch revocation list from ${source}: ${response.status}`);
+      }
+      const contentLength = response.headers.get('content-length');
+      if (contentLength && parseInt(contentLength, 10) > 10 * 1024 * 1024) {
+        throw new Error('Revocation list exceeds 10MB size limit');
       }
       raw = await response.text();
       if (raw.length > 10 * 1024 * 1024) {

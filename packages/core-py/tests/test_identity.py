@@ -1,5 +1,3 @@
-"""Tests for identity module."""
-
 import json
 import os
 import stat
