@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentid.dev/schema/manifest/v0.1",
+  "title": "AgentID Manifest",
+  "description": "Agent identity manifest schema v0.1",
+  "type": "object",
+  "required": ["manifest_version", "agent_id", "name", "version", "capabilities", "expires_at"],
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "const": "0.1",
+      "description": "Schema version"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^aid_ed25519_",
+      "description": "Deterministic agent identifier derived from public key"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Human-readable agent name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Agent version (semver recommended)"
+    },
+    "operator": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "Domain controlled by the operator"
+        },
+        "contact": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email"
+        },
+        "domain_proof": {
+          "type": "string",
+          "enum": ["dns-txt", "well-known"],
+          "description": "Method used to verify domain control"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$",
+            "description": "Capability identifier (namespace:action format)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description"
+          },
+          "constraints": {
+            "type": "object",
+            "properties": {
+              "max_amount_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Maximum monetary value per action in USD"
+              },
+              "require_human_approval_above_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Threshold above which human approval is required"
+              },
+              "allowed_recipients": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Classes of allowed recipients"
+              },
+              "rate_limit": {
+                "type": "string",
+                "pattern": "^\\d+/(second|minute|hour|day)$",
+                "description": "Rate limit expression"
+              },
+              "scope": {
+                "type": "string",
+                "description": "Data scope restriction"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "description": "Declared capabilities with optional constraints"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Manifest expiry (ISO 8601)"
+    },
+    "policy_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the agent's recommended policy"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Arbitrary metadata"
+    }
+  },
+  "additionalProperties": false
+}

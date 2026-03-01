@@ -1,0 +1,94 @@
+{
+  "_comment": "Shared test vectors for cross-language SDK consistency. Both TypeScript and Python SDKs must produce identical outputs for these inputs.",
+  "keypair": {
+    "_comment": "Known keypair for deterministic testing. DO NOT use in production.",
+    "privateKeyHex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+    "publicKeyHex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa3f4a18446b0b8d183f8e3",
+    "agentId": "aid_ed25519_FhB8BhPkNhyp5MqkAG4sYEL5P1gCbHK4C9SCaM1YFRV3"
+  },
+  "manifest": {
+    "input": {
+      "manifest_version": "0.1",
+      "agent_id": "aid_ed25519_FhB8BhPkNhyp5MqkAG4sYEL5P1gCbHK4C9SCaM1YFRV3",
+      "name": "TestAgent",
+      "version": "1.0.0",
+      "capabilities": [
+        {
+          "id": "payments:send",
+          "description": "Send payments",
+          "constraints": {
+            "max_amount_usd": 500
+          }
+        }
+      ],
+      "expires_at": "2030-01-01T00:00:00Z"
+    },
+    "canonicalized": "{\"agent_id\":\"aid_ed25519_FhB8BhPkNhyp5MqkAG4sYEL5P1gCbHK4C9SCaM1YFRV3\",\"capabilities\":[{\"constraints\":{\"max_amount_usd\":500},\"description\":\"Send payments\",\"id\":\"payments:send\"}],\"expires_at\":\"2030-01-01T00:00:00Z\",\"manifest_version\":\"0.1\",\"name\":\"TestAgent\",\"version\":\"1.0.0\"}"
+  },
+  "policy_evaluation": {
+    "policy": {
+      "policy_version": "0.1",
+      "rules": [
+        {
+          "action": "payments:send",
+          "require": {
+            "min_trust_level": 0,
+            "manifest_not_expired": true,
+            "not_revoked": true,
+            "capability_declared": "payments:send",
+            "constraints_satisfied": true
+          },
+          "on_fail": "REJECT"
+        }
+      ],
+      "default": "REJECT"
+    },
+    "cases": [
+      {
+        "name": "valid_small_payment",
+        "action": "payments:send",
+        "action_params": { "amount_usd": 50 },
+        "trust_level": 0,
+        "revoked": false,
+        "expired": false,
+        "expected_decision": "ACCEPT"
+      },
+      {
+        "name": "amount_exceeds_max",
+        "action": "payments:send",
+        "action_params": { "amount_usd": 300000 },
+        "trust_level": 0,
+        "revoked": false,
+        "expired": false,
+        "expected_decision": "REJECT"
+      },
+      {
+        "name": "revoked_key",
+        "action": "payments:send",
+        "action_params": { "amount_usd": 50 },
+        "trust_level": 0,
+        "revoked": true,
+        "expired": false,
+        "expected_decision": "REJECT"
+      },
+      {
+        "name": "expired_manifest",
+        "action": "payments:send",
+        "action_params": { "amount_usd": 50 },
+        "trust_level": 0,
+        "revoked": false,
+        "expired": true,
+        "expected_decision": "REJECT"
+      },
+      {
+        "name": "unknown_action",
+        "action": "data:delete",
+        "action_params": {},
+        "trust_level": 0,
+        "revoked": false,
+        "expired": false,
+        "expected_decision": "REJECT"
+      }
+    ]
+  }
+}

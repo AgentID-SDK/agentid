@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typescript:
+    name: TypeScript SDK
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run lint
+      - run: npm test
+
+  python:
+    name: Python SDK
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    defaults:
+      run:
+        working-directory: packages/core-py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: mypy agentid/
+      - run: pytest
+
+  dco-check:
+    name: DCO Sign-off Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check DCO
+        run: |
+          commits=$(git log --format='%H %s' origin/main..HEAD 2>/dev/null || echo "")
+          if [ -z "$commits" ]; then
+            echo "No new commits to check."
+            exit 0
+          fi
+          failed=0
+          while IFS= read -r line; do
+            hash=$(echo "$line" | cut -d' ' -f1)
+            body=$(git log -1 --format='%b' "$hash")
+            if ! echo "$body" | grep -q "Signed-off-by:"; then
+              echo "Missing DCO sign-off: $line"
+              failed=1
+            fi
+          done <<< "$commits"
+          if [ "$failed" -eq 1 ]; then
+            echo "Some commits are missing DCO sign-off. Use 'git commit -s' to sign."
+            exit 1
+          fi

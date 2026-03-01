@@ -1,0 +1,40 @@
+name: Spec Proposal
+description: Propose a change to the AgentID specification
+labels: ["spec", "proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Spec changes follow a stricter review process. Allow 2 weeks for discussion and require 2 maintainer approvals. Breaking changes require a new major version.
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this change needed?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the proposed spec change in detail
+    validations:
+      required: true
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Is this a breaking change?
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+  - type: textarea
+    id: migration
+    attributes:
+      label: Migration path
+      description: If breaking, how should existing users migrate?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

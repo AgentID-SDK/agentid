@@ -1,0 +1,25 @@
+{
+  "name": "agentid",
+  "private": true,
+  "description": "Cryptographic identity, capability constraints, and policy-enforced authorization for AI agents",
+  "workspaces": [
+    "packages/core-ts",
+    "packages/cli"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"packages/**/*.ts\"",
+    "format:check": "prettier --check \"packages/**/*.ts\"",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "latest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}
